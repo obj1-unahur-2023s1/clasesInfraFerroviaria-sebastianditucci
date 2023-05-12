@@ -1,0 +1,46 @@
+import formacion.*
+import vagones.*
+import locomotoras.*
+
+describe "primera formacion con locomotoras" {
+	const formacion1 = new Formacion()
+	const vagon1 = new VagonDePasajeros(largo = 10, ancho = 4, estaOrdenado = true, tieneBanios = true )
+	const vagon2 = new VagonDePasajeros(largo = 7, ancho = 2, estaOrdenado = false, tieneBanios = false )
+	const vagon3 = new VagonDeCarga(cargaMaximaIdeal = 6800, cantMaderasSueltas = 5) 
+	const vagon4 = new VagonDormitorio(cantCompartimientos = 8, cantCamasPorCompartimiento = 3)
+	const locomotora1 = new Locomotora(peso = 3000, cuantoPuedeArrastrar = 20000, velocidadMaxima = 1000)
+	const locomotora2 = new Locomotora(peso = 5000, cuantoPuedeArrastrar = 22000, velocidadMaxima = 1000)
+	method initialize() {
+		formacion1.aniadirVagon(vagon1)
+		formacion1.aniadirVagon(vagon2)
+		formacion1.aniadirVagon(vagon3)
+		formacion1.aniadirVagon(vagon4)
+	}
+	test "es eficiente si le agregamos la locomotora 1" {
+		formacion1.aniadirLocomotora(locomotora1)
+		assert.that(formacion1.esEficiente())
+	}
+	test "no puede moverse si le agregamos la locomotora 1" {
+		formacion1.aniadirLocomotora(locomotora1)
+		assert.notThat(formacion1.puedeMoverse())
+	}
+	test "le faltan 12800 kg de empuje si le agregamos la locomotora 1" {
+		formacion1.aniadirLocomotora(locomotora1)
+		assert.equals(12800, formacion1.kilosDeEmpujeParaPoderMoverse())
+	}
+	test "no es eficiente si le agregamos la locomotora 2" {
+		formacion1.aniadirLocomotora(locomotora1)
+		formacion1.aniadirLocomotora(locomotora2)
+		assert.notThat(formacion1.esEficiente())
+	}
+	test "puede moverse si le agregamos la locomotora 2" {
+		formacion1.aniadirLocomotora(locomotora1)
+		formacion1.aniadirLocomotora(locomotora2)
+		assert.that(formacion1.puedeMoverse())
+	}
+	test "le faltan 0 kg de empuje si le agregamos la locomotora 2" {
+		formacion1.aniadirLocomotora(locomotora1)
+		formacion1.aniadirLocomotora(locomotora2)
+		assert.equals(0, formacion1.kilosDeEmpujeParaPoderMoverse())
+	}
+}
