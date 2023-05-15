@@ -19,13 +19,9 @@ class Formacion {
 	method cantidadBanios() = vagones.count({vagon => vagon.tieneBanios()})
 	method hacerMantenimiento() = vagones.forEach({vagon => vagon.recibirMantenimiento()})
 	method estaEquilibrada() {
-		return (vagones.filter({vagon => vagon.cantidadPasajeros() > 0}).max({vagon => vagon.cantidadPasajeros()}) - 
-			vagones.filter({vagon => vagon.cantidadPasajeros() > 0}).min({vagon => vagon.cantidadPasajeros()})) < 20
+		return (vagones.max({vagon => vagon.cantidadPasajeros()}).cantidadDePasajeros() - vagones.min({vagon => vagon.cantidadPasajeros()}).cantidadDePasajeros()) < 20
     }
-    method estaOrdenada() {
-    	return (vagones.isEmpty() or vagones.all({vagon => vagon.cantidadPasajeros() >= 1})) or 
-        (vagones.isSorted({vagon1, vagon2 => vagon1.cantidadPasajeros() <= vagon2.cantidadPasajeros()}))
-    }
+    method estaOrdenada() { } //nose como hacerlo 
     method velocidadMaxima() = locomotoras.min({locomotora => locomotora.velocidadMaxima()}).velocidadMaxima()
     method esEficiente() = locomotoras.all({locomotora => locomotora.esEficiente()})
     method pesoMaximo() = locomotoras.sum({locomotora => locomotora.peso()}) + vagones.sum({vagon => vagon.pesoMaximo()})
@@ -34,4 +30,5 @@ class Formacion {
     	if (self.puedeMoverse()) { return 0 }
     	else { return  self.pesoMaximo() - locomotoras.sum({locomotora => locomotora.cuantoPuedeArrastrar()})}
     }
+    method esCompleja() = (locomotoras.size() + vagones.size()) > 8 or self.pesoMaximo() > 80000
 }
